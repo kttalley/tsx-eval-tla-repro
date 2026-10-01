@@ -1,0 +1,17 @@
+name: repro
+on: [push, workflow_dispatch]
+jobs:
+  repro:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm install
+      - name: node -e (works)
+        run: node -e "await Promise.resolve(1); console.log('ok')"
+      - name: tsx --input-type=module -e (works)
+        run: npx tsx --input-type=module -e "await Promise.resolve(1); console.log('ok')"
+      - name: tsx -e (fails)
+        run: npx tsx -e "await Promise.resolve(1); console.log('ok')"
